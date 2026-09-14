@@ -85,15 +85,17 @@ jobs:
         if: success()
         run: |
           mkdir -p releases
-          FIRMFILE=$(find openwrt/bin/targets/mediatek/filogic -name "*tenda*rx12l*" 2>/dev/null | head 1)
-          if [ -n "$FIRMFILE" ]; then
-            cp "$FIRMFILE" releases/
-            echo "Copied: $FIRMFILE"
-          else
-            echo "ERROR: Firmware file not found!"
-            find openwrt/bin -name "*.bin" -type f | head -10
-            exit 1
-          fi
+
+        FIRMFILE=$(find openwrt/bin/targets/mediatek/filogic -name "*tenda*rx12l*" 2>/dev/null | head -n 1)
+
+        if [ -n "$FIRMFILE" ]; then
+          cp "$FIRMFILE" releases/
+          echo "Copied: $FIRMFILE"
+        else
+          echo "ERROR: Firmware file not found!"
+          find openwrt/bin -name "*.bin" -type f | head -n 10
+          exit 1
+        fi
 
       - name: Upload artifacts
         if: success()
